@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Typography,
@@ -8,7 +8,9 @@ import {
   Card,
   List,
   ListItem,
+  Collapse,
 } from "@material-tailwind/react";
+
 import {
   Bars3Icon,
   XMarkIcon,
@@ -19,160 +21,295 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 
-export default function MainNavbar({ user, onLogout, children }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+export default function MainNavbar({ user, onLogout }) {
+  const [openNav, setOpenNav] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const openDrawer = () => setIsDrawerOpen(true);
-  const closeDrawer = () => setIsDrawerOpen(false);
+  const canAccessGenerator = Boolean(user?.is_active);
 
-  // Regra de Acesso: Usuário precisa estar logado E com status ativo
-  const canAccessGenerator = Boolean(user && user.is_active);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 960) {
+        setOpenNav(false);
+        setOpenDrawer(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
-      <Navbar className="mx-auto max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4">
-        <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
+      <Navbar className="mx-auto w-full max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4">
+        <div className="flex items-center">
 
-          {/* Logo / Título */}
+          {/* LOGO */}
           <Typography
             as="a"
             href="/"
-            className="mr-4 cursor-pointer py-1.5 font-bold text-lg text-blue-600 flex items-center gap-2"
+            type="small"
+            className="mx-2 flex items-center gap-2 py-1 font-bold text-blue-600"
           >
             <ShieldCheckIcon className="h-6 w-6" />
             CertGenerate
           </Typography>
 
-          {/* NAV LIST - DESKTOP (Invisível em Mobile) */}
-          <div className="hidden lg:block">
-            <ul className="flex items-center gap-6">
-              {/* Generator (Apenas Usuário Logado e Ativo) */}
+          {/* NAVEGAÇÃO DESKTOP */}
+          <div className="hidden lg:ml-auto lg:mr-2 lg:block">
+            <ul className="flex items-center gap-x-6">
+
               {canAccessGenerator && (
-                <Typography
-                  as="li"
-                  variant="small"
-                  color="blue-gray"
-                  className="font-medium hover:text-blue-500 transition-colors"
-                >
-                  <a href="/generator" className="flex items-center gap-1">
+                <li>
+                  <Typography
+                    as="a"
+                    href="/generator"
+                    type="small"
+                    className="flex items-center gap-1 p-1 font-medium text-blue-gray-900 transition-colors hover:text-blue-500"
+                  >
                     <CogIcon className="h-4 w-4" />
                     Generator
-                  </a>
-                </Typography>
+                  </Typography>
+                </li>
               )}
 
-              {/* Validar (Público) */}
-              <Typography
-                as="li"
-                variant="small"
-                color="blue-gray"
-                className="font-medium hover:text-blue-500 transition-colors"
-              >
-                <a href="/validate" className="flex items-center gap-1">
+              <li>
+                <Typography
+                  as="a"
+                  href="/validate"
+                  type="small"
+                  className="flex items-center gap-1 p-1 font-medium text-blue-gray-900 transition-colors hover:text-blue-500"
+                >
                   <DocumentCheckIcon className="h-4 w-4" />
                   Validar
-                </a>
-              </Typography>
+                </Typography>
+              </li>
+
             </ul>
           </div>
 
-          {/* BOTÕES DE AÇÃO - DESKTOP */}
-          <div className="hidden lg:flex items-center gap-x-2">
+          {/* AÇÕES DESKTOP */}
+          <div className="hidden items-center gap-x-2 lg:flex">
+
             {!user ? (
               <>
-                <Button as="a" href="/login" variant="text" size="sm" color="blue-gray">
+                <Button
+                  as="a"
+                  href="/login"
+                  variant="ghost"
+                  size="sm"
+                  color="secondary"
+                >
                   Login
                 </Button>
-                <Button as="a" href="/register" variant="gradient" size="sm" color="blue">
+
+                <Button
+                  as="a"
+                  href="/register"
+                  variant="gradient"
+                  size="sm"
+                  color="primary"
+                >
                   Registro
                 </Button>
               </>
             ) : (
-              <Button onClick={onLogout} variant="outlined" size="sm" color="red">
+              <Button
+                onClick={onLogout}
+                variant="outline"
+                size="sm"
+                color="error"
+              >
                 Sair
               </Button>
             )}
+
           </div>
 
-          {/* BOTÃO HAMBÚRGUER (Visível APENAS em Dispositivos Móveis) */}
+          {/* MENU MOBILE */}
           <IconButton
-            variant="text"
-            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-            ripple={false}
-            onClick={openDrawer}
+            size="sm"
+            variant="ghost"
+            color="secondary"
+            onClick={() => setOpenNav(!openNav)}
+            className="ml-auto grid lg:hidden"
           >
-            <Bars3Icon className="h-7 w-7 stroke-2" />
+            {openNav ? (
+              <XMarkIcon className="h-5 w-5" />
+            ) : (
+              <Bars3Icon className="h-5 w-5" />
+            )}
           </IconButton>
         </div>
+
+        {/* MENU MOBILE */}
+        <Collapse open={openNav}>
+          <div className="mt-4 rounded-lg border border-blue-gray-50 p-2 lg:hidden">
+
+            <List>
+
+              {canAccessGenerator && (
+                <ListItem
+                  as="a"
+                  href="/generator"
+                  onClick={() => setOpenNav(false)}
+                >
+                  <CogIcon className="mr-3 h-5 w-5" />
+                  Generator
+                </ListItem>
+              )}
+
+              <ListItem
+                as="a"
+                href="/validate"
+                onClick={() => setOpenNav(false)}
+              >
+                <DocumentCheckIcon className="mr-3 h-5 w-5" />
+                Validar
+              </ListItem>
+
+              <hr className="my-3 border-blue-gray-50" />
+
+              {!user ? (
+                <>
+                  <ListItem
+                    as="a"
+                    href="/login"
+                    onClick={() => setOpenNav(false)}
+                  >
+                    <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5" />
+                    Login
+                  </ListItem>
+
+                  <ListItem
+                    as="a"
+                    href="/register"
+                    onClick={() => setOpenNav(false)}
+                  >
+                    <UserPlusIcon className="mr-3 h-5 w-5" />
+                    Registro
+                  </ListItem>
+                </>
+              ) : (
+                <ListItem
+                  onClick={() => {
+                    setOpenNav(false);
+                    onLogout?.();
+                  }}
+                  className="text-red-500"
+                >
+                  <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-red-500" />
+                  Sair
+                </ListItem>
+              )}
+
+            </List>
+          </div>
+        </Collapse>
       </Navbar>
 
-      {/* SIDEBAR DRAWER (Dispositivos Móveis) */}
-      <Drawer open={isDrawerOpen} onClose={closeDrawer} className="p-4">
-        <Card color="transparent" shadow={false} className="h-full w-full">
+      {/* DRAWER */}
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <Drawer.Overlay>
+          <Drawer.Panel placement="left" className="p-4">
 
-          {/* Header da Sidebar */}
-          <div className="mb-6 flex items-center justify-between p-2 border-b border-gray-100">
-            <Typography variant="h5" color="blue-gray" className="flex items-center gap-2">
-              <ShieldCheckIcon className="h-6 w-6 text-blue-600" />
-              CertGenerate
-            </Typography>
-            <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
-              <XMarkIcon className="h-6 w-6 stroke-2" />
-            </IconButton>
-          </div>
+            <Card
+              color="transparent"
+              shadow={false}
+              className="h-full w-full"
+            >
 
-          {/* Lista de Navegação da Sidebar */}
-          <List>
-            {/* Generator (Protegido por Regra de Acesso) */}
-            {canAccessGenerator && (
-              <ListItem as="a" href="/generator" onClick={closeDrawer}>
-                <span className="mr-3">
-                  <CogIcon className="h-5 w-5" />
-                </span>
-                Generator
-              </ListItem>
-            )}
+              {/* HEADER */}
+              <div className="mb-6 flex items-center justify-between border-b border-gray-100 p-2">
 
-            {/* Validar (Público) */}
-            <ListItem as="a" href="/validate" onClick={closeDrawer}>
-              <ListItemPrefix>
-                <DocumentCheckIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Validar
-            </ListItem>
+                <Typography
+                  type="h5"
+                  color="secondary"
+                  className="flex items-center gap-2"
+                >
+                  <ShieldCheckIcon className="h-6 w-6 text-blue-600" />
+                  CertGenerate
+                </Typography>
 
-            <hr className="my-3 border-blue-gray-50" />
+                <IconButton
+                  size="sm"
+                  variant="ghost"
+                  color="secondary"
+                  onClick={() => setOpenDrawer(false)}
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </IconButton>
 
-            {/* Ações de Autenticação */}
-            {!user ? (
-              <>
-                <ListItem as="a" href="/login" onClick={closeDrawer}>
-                  <ListItemPrefix>
-                    <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                  </ListItemPrefix>
-                  Login
+              </div>
+
+              {/* NAVEGAÇÃO */}
+              <List>
+
+                {canAccessGenerator && (
+                  <ListItem
+                    as="a"
+                    href="/generator"
+                    onClick={() => setOpenDrawer(false)}
+                  >
+                    <CogIcon className="mr-3 h-5 w-5" />
+                    Generator
+                  </ListItem>
+                )}
+
+                <ListItem
+                  as="a"
+                  href="/validate"
+                  onClick={() => setOpenDrawer(false)}
+                >
+                  <DocumentCheckIcon className="mr-3 h-5 w-5" />
+                  Validar
                 </ListItem>
-                <ListItem as="a" href="/register" onClick={closeDrawer}>
-                  <ListItemPrefix>
-                    <UserPlusIcon className="h-5 w-5" />
-                  </ListItemPrefix>
-                  Registro
-                </ListItem>
-              </>
-            ) : (
-              <ListItem onClick={() => { closeDrawer(); onLogout(); }} className="text-red-500 hover:bg-red-50">
-                <ListItemPrefix>
-                  <ArrowRightOnRectangleIcon className="h-5 w-5 text-red-500" />
-                </ListItemPrefix>
-                Sair
-              </ListItem>
-            )}
-          </List>
-        </Card>
+
+                <hr className="my-3 border-blue-gray-50" />
+
+                {!user ? (
+                  <>
+                    <ListItem
+                      as="a"
+                      href="/login"
+                      onClick={() => setOpenDrawer(false)}
+                    >
+                      <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5" />
+                      Login
+                    </ListItem>
+
+                    <ListItem
+                      as="a"
+                      href="/register"
+                      onClick={() => setOpenDrawer(false)}
+                    >
+                      <UserPlusIcon className="mr-3 h-5 w-5" />
+                      Registro
+                    </ListItem>
+                  </>
+                ) : (
+                  <ListItem
+                    onClick={() => {
+                      setOpenDrawer(false);
+                      onLogout?.();
+                    }}
+                    className="text-red-500"
+                  >
+                    <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-red-500" />
+                    Sair
+                  </ListItem>
+                )}
+
+              </List>
+
+            </Card>
+
+          </Drawer.Panel>
+        </Drawer.Overlay>
       </Drawer>
-
-      {/* Conteúdo Principal da Aplicação */}
-      <main className="container mx-auto p-4">{children}</main>
     </>
   );
 }

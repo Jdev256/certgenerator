@@ -56,153 +56,240 @@ export default function ValidateDocument() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-xl">
+    <div className="min-h-[calc(100vh-80px)] bg-gray-50 px-4 py-12">
+      <div className="mx-auto w-full max-w-2xl">
 
-        {/* Cabeçalho da Página */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-3 bg-blue-50 text-blue-600 rounded-full mb-3">
-            <ShieldCheck className="w-10 h-10" />
+        {/* CABEÇALHO */}
+        <header className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <ShieldCheck className="h-10 w-10" />
           </div>
-          <Typography variant="h3" color="blue-gray" className="font-bold">
+
+          <Typography
+            type="h2"
+            className="font-bold text-gray-900"
+          >
             Validação de Documento
           </Typography>
-          <Typography color="gray" className="mt-1 text-sm font-normal">
-            Insira o código de verificação impresso no certificado para checar sua autenticidade.
-          </Typography>
-        </div>
 
-        {/* Formulário de Busca */}
-        <Card className="p-6 shadow-md mb-6">
-          <form onSubmit={handleValidate} className="flex flex-col sm:flex-row gap-3">
-            <div className="relative w-full">
+          <Typography className="mx-auto mt-2 max-w-xl font-normal text-gray-600">
+            Insira o código de verificação impresso no certificado para
+            verificar sua autenticidade.
+          </Typography>
+        </header>
+
+        {/* FORMULÁRIO */}
+        <Card className="mb-6 p-6 shadow-md">
+          <form
+            onSubmit={handleValidate}
+            className="flex flex-col gap-4 sm:flex-row sm:items-end"
+          >
+            <div className="w-full">
               <Input
                 type="text"
                 size="lg"
                 label="Código de Verificação"
-                placeholder="Ex: IESI-A1B2C3D4 ou UUID"
+                placeholder="IESI-A1B2C3D4 ou UUID"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                required
-                className="pr-10"
+                onChange={(event) => setCode(event.target.value)}
+                disabled={loading}
               />
             </div>
+
             <Button
               type="submit"
+              size="lg"
+              variant="solid"
+              color="primary"
               disabled={loading || !code.trim()}
-              className="flex items-center justify-center gap-2 sm:w-auto w-full"
+              className="flex w-full shrink-0 items-center justify-center gap-2 sm:w-auto"
             >
-              <Search className="w-4 h-4" />
+              <Search className="h-4 w-4" />
+
               {loading ? "Validando..." : "Validar"}
             </Button>
           </form>
         </Card>
 
-        {/* --- CARD DE FALHA / ERRO --- */}
+        {/* ERRO */}
         {error && (
           <Alert
-            color="red"
-            icon={<XCircle className="w-6 h-6" />}
-            className="shadow-sm border border-red-200"
+            color="error"
+            className="mb-6 border border-red-200"
           >
-            <Typography variant="h6" color="white" className="font-semibold">
-              Documento Não Autenticado
-            </Typography>
-            <Typography variant="small" color="white" className="mt-1 font-normal opacity-90">
-              {error}
-            </Typography>
+            <Alert.Icon>
+              <XCircle className="h-5 w-5" />
+            </Alert.Icon>
+
+            <Alert.Content>
+              <Typography
+                type="h6"
+                color="error"
+                className="font-semibold"
+              >
+                Documento Não Autenticado
+              </Typography>
+
+              <Typography
+                type="small"
+                className="mt-1 font-normal text-gray-700"
+              >
+                {error}
+              </Typography>
+            </Alert.Content>
           </Alert>
         )}
 
-        {/* --- CARD DE SUCESSO --- */}
+        {/* RESULTADO */}
         {result && (
-          <Card className="border border-green-200 shadow-lg overflow-hidden animate-fade-in">
-            {/* Header de Validação Positiva */}
-            <div className="bg-green-500 p-4 text-white flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-6 h-6" />
-                <Typography variant="h6" color="white" className="font-semibold">
-                  Documento Autêntico e Válido
-                </Typography>
+          <Card className="overflow-hidden border border-green-200 shadow-lg">
+
+            {/* CABEÇALHO DO RESULTADO */}
+            <div className="flex items-center justify-between gap-4 bg-green-600 p-5 text-white">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-7 w-7 shrink-0" />
+
+                <div>
+                  <Typography
+                    type="h6"
+                    className="font-bold text-white"
+                  >
+                    Documento Autêntico e Válido
+                  </Typography>
+
+                  <Typography className="mt-0.5 text-sm text-green-100">
+                    Verificação realizada com sucesso.
+                  </Typography>
+                </div>
               </div>
+
               <Chip
-                value="Verificado"
-                color="white"
-                className="text-green-800 font-bold uppercase text-xs"
-              />
+                size="sm"
+                variant="solid"
+                color="success"
+              >
+                <Chip.Label>
+                  Verificado
+                </Chip.Label>
+              </Chip>
             </div>
 
-            <CardBody className="space-y-4">
-              {/* Nome do Documento / Evento */}
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-                <Award className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                <div>
-                  <Typography variant="small" color="gray" className="font-medium">
+            {/* CORPO */}
+            <Card.Body className="space-y-5">
+
+              {/* DOCUMENTO */}
+              <div className="flex items-start gap-3 border-b border-gray-100 pb-4">
+                <Award className="mt-1 h-5 w-5 shrink-0 text-blue-600" />
+
+                <div className="min-w-0">
+                  <Typography
+                    type="small"
+                    className="font-medium text-gray-500"
+                  >
                     Documento / Evento
                   </Typography>
-                  <Typography variant="h6" color="blue-gray">
+
+                  <Typography
+                    type="h6"
+                    className="mt-1 break-words text-gray-900"
+                  >
                     {result.name}
                   </Typography>
                 </div>
               </div>
 
-              {/* Nome do Portador */}
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-                <User className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                <div>
-                  <Typography variant="small" color="gray" className="font-medium">
+              {/* PORTADOR */}
+              <div className="flex items-start gap-3 border-b border-gray-100 pb-4">
+                <User className="mt-1 h-5 w-5 shrink-0 text-blue-600" />
+
+                <div className="min-w-0">
+                  <Typography
+                    type="small"
+                    className="font-medium text-gray-500"
+                  >
                     Emitido para
                   </Typography>
-                  <Typography variant="h6" color="blue-gray">
+
+                  <Typography
+                    type="h6"
+                    className="mt-1 break-words text-gray-900"
+                  >
                     {result.student_name}
                   </Typography>
                 </div>
               </div>
 
-              {/* Informações Complementares (Grid) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                {result.student_email && (
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <Typography variant="small" color="gray" className="text-xs">
-                        E-mail
-                      </Typography>
-                      <Typography variant="small" color="blue-gray" className="font-semibold">
-                        {result.student_email}
-                      </Typography>
-                    </div>
-                  </div>
-                )}
+              {/* INFORMAÇÕES COMPLEMENTARES */}
+              {(result.student_email || result.city) && (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
 
-                {result.city && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <Typography variant="small" color="gray" className="text-xs">
-                        Cidade Polo
-                      </Typography>
-                      <Typography variant="small" color="blue-gray" className="font-semibold">
-                        {result.city}
-                      </Typography>
-                    </div>
-                  </div>
-                )}
-              </div>
+                  {result.student_email && (
+                    <div className="flex items-start gap-3">
+                      <Mail className="mt-1 h-5 w-5 shrink-0 text-gray-400" />
 
-              {/* Código de Verificação Footer */}
-              <div className="bg-gray-50 p-3 rounded-lg text-center mt-4 border border-gray-200">
-                <Typography variant="small" color="gray" className="text-xs font-medium">
-                  CÓDIGO DE VERIFICAÇÃO PÚBLICA
+                      <div className="min-w-0">
+                        <Typography
+                          type="small"
+                          className="font-medium text-gray-500"
+                        >
+                          E-mail
+                        </Typography>
+
+                        <Typography
+                          type="small"
+                          className="mt-1 break-all font-semibold text-gray-900"
+                        >
+                          {result.student_email}
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+
+                  {result.city && (
+                    <div className="flex items-start gap-3">
+                      <MapPin className="mt-1 h-5 w-5 shrink-0 text-gray-400" />
+
+                      <div>
+                        <Typography
+                          type="small"
+                          className="font-medium text-gray-500"
+                        >
+                          Cidade Polo
+                        </Typography>
+
+                        <Typography
+                          type="small"
+                          className="mt-1 font-semibold text-gray-900"
+                        >
+                          {result.city}
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              )}
+
+              {/* CÓDIGO */}
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
+                <Typography
+                  type="small"
+                  className="font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Código de Verificação Pública
                 </Typography>
-                <Typography variant="small" color="blue-gray" className="font-mono font-bold tracking-wider">
+
+                <Typography
+                  type="small"
+                  className="mt-2 break-all font-mono font-bold tracking-wider text-gray-900"
+                >
                   {result.verification_code}
                 </Typography>
               </div>
-            </CardBody>
+
+            </Card.Body>
           </Card>
         )}
-
       </div>
     </div>
   );

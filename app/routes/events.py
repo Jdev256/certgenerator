@@ -1,8 +1,8 @@
-from typing import List, Optional
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
-from schemas import EventUpdate
+from app.schemas import EventUpdate
 # Importações dos módulos da aplicação (ajuste os caminhos conforme sua estrutura)
 from ..db import get_db
 from ..models import Event, User, EventStatus

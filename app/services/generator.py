@@ -17,9 +17,9 @@ from fastapi import UploadFile
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from models import Event
-from db import SessionLocal, engine
-from models import Destinatario, Base, Document, DocumentType
+from app.models import Event
+from app.db import SessionLocal
+from app.models import Destinatario, Document, DocumentType
 
 
 class Generator:

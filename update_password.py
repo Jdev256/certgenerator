@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from app.src.security import get_password_hash
-from app.src.models import User
+from app.security import get_password_hash
+from app.models import User
 
 POSTGRES_URL = "postgresql://neondb_owner:npg_x9Zvlwd4EkhO@ep-autumn-dust-ac6p2jh1-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 

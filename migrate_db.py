@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 # Importe os modelos da nova estrutura (as classes declaradas no seu trecho de código)
-from app.src.models import Base, User, Event, Destinatario, Document, RecipientType, DocumentType, EventStatus
+from app.models import Base, User, Event, Destinatario, Document, RecipientType, DocumentType, EventStatus
 
 # Configurações de Conexão
 SQLITE_DB_PATH = "cert.db"

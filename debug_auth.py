@@ -1,6 +1,6 @@
-from app.src.db import get_db  # Importa o mesmo DB da sua aplicação FastAPI
-from app.src.models import User
-from app.src.security import get_password_hash, verify_password
+from app.db import get_db  # Importa o mesmo DB da sua aplicação FastAPI
+from app.models import User
+from app.security import get_password_hash, verify_password
 
 # 1. Teste isolado do algoritmo
 pw_test = "iesi2026"
