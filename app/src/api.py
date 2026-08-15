@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from db import engine
-from models import Base
+from .db import engine
+from .models import Base
 from .routes.users import router as users_router
 from .routes.documents import router as certs_router
 from .routes.validation import router as validation_router

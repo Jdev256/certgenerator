@@ -8,14 +8,13 @@ import DashboardLayout from "./layouts/DashboardLayout";
 
 // Páginas Públicas / Gerais
 import Home from "./pages/Home";
-import Generator from "./pages/Generator";
-import Validate from "./pages/Validate";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-
-import EventsPage from "./pages/admin/EventsPage";
-import RecipientsPage from "./pages/admin/RecipientsPage";
-import DocumentsPage from "./pages/admin/DocumentsPage";
+//import Generator from "./pages/Generator";
+import ValidateDocument from "./pages/ValidateDocument";
+//import Login from "./pages/Login";
+//import Register from "./pages/Register";
+//import EventsPage from "./pages/admin/EventsPage";
+//import RecipientsPage from "./pages/admin/RecipientsPage";
+//import DocumentsPage from "./pages/admin/DocumentsPage";
 
 // 1. Guard de Rota Protegida
 const ProtectedRoute = ({ user, children }) => {
@@ -50,7 +49,7 @@ function App() {
         {/* ================= ROTAS COM MAIN NAVBAR ================= */}
         <Route element={<PublicLayout user={user} onLogout={handleLogout} />}>
           <Route path="/" element={<Home />} />
-          <Route path="/validate" element={<Validate />} />
+          <Route path="/validation" element={<ValidateDocument />} />
           {/*<Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />*/}
 
