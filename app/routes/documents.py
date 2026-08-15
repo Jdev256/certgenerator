@@ -19,6 +19,9 @@ router = APIRouter(
 STORAGE_DIR = Path("storage/zip_exports")
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 
+STORAGE_TEMPLATES_DIR = Path("storage/templates")
+STORAGE_TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+
 @router.get("/", response_model=list[DocumentResponse], status_code=status.HTTP_200_OK)
 def list_user_documents(
     event_id: int = Query(..., description="ID do evento para filtrar os documentos"),
@@ -53,13 +56,23 @@ async def upload(
     if not event:
         raise HTTPException(status_code=404, detail="Evento não encontrado ou não pertence ao usuário.")
 
-    await excel.seek(0)
-    await template.seek(0)
+    template_filename = f"template_event_{event_id}.svg"
+    permanent_template_path = STORAGE_TEMPLATES_DIR / template_filename
 
+
+    await template.seek(0)
+    content = await template.read()
+    with open(permanent_template_path, "wb") as f:
+        f.write(content)
+
+    event.template_svg_path = str(permanent_template_path)
+    db.commit()
+
+    await excel.seek(0)
     # Executa a geração e a persistência no banco via Generator
     zip_buffer = Generator.generate_documents(
         excel=excel,
-        template_path=template,
+        template_path=str(permanent_template_path),
         db=db,
         user_id=current_user.id,
         event_id=event_id
@@ -105,3 +118,38 @@ def download(
         media_type='application/zip',
         headers={'Content-Disposition': 'attachment; filename="documentos.zip"'}
     )
+
+# app/routes/documents.py
+from fastapi.responses import StreamingResponse
+
+@router.get('/download-all', summary="Baixar todos os certificados do banco de dados")
+def download_all_from_db(
+    event_id: int = Query(..., description="ID do evento ao qual os documentos pertencem"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Gera dinamicamente o arquivo ZIP com todos os documentos/certificados
+    já gravados no banco de dados para o evento especificado.
+    """
+    try:
+        zip_buffer = Generator.generate_zip_from_db(
+            event_id=event_id,
+            user_id=current_user.id,
+            db=db
+        )
+
+        return StreamingResponse(
+            zip_buffer,
+            media_type="application/zip",
+            headers={
+                'Content-Disposition': f'attachment; filename="evento_{event_id}_certificados.zip"'
+            }
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao processar o download dos documentos: {str(e)}"
+        )

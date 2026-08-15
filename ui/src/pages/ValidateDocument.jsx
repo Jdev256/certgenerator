@@ -39,7 +39,7 @@ export default function ValidateDocument() {
     try {
       // Endpoint público de validação (não requer Bearer Token)
       const response = await axios.get(
-        `http://localhost:8000/api/validate/${encodeURIComponent(cleanCode)}`
+        `https://certgenerator.com.br/api/validate/${encodeURIComponent(cleanCode)}`
       );
 
       setResult(response.data);
