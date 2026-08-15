@@ -8,7 +8,6 @@ import {
   Card,
   List,
   ListItem,
-  ListItemPrefix,
 } from "@material-tailwind/react";
 import {
   Bars3Icon,
@@ -127,9 +126,9 @@ export default function MainNavbar({ user, onLogout, children }) {
             {/* Generator (Protegido por Regra de Acesso) */}
             {canAccessGenerator && (
               <ListItem as="a" href="/generator" onClick={closeDrawer}>
-                <ListItemPrefix>
+                <span className="mr-3">
                   <CogIcon className="h-5 w-5" />
-                </ListItemPrefix>
+                </span>
                 Generator
               </ListItem>
             )}
