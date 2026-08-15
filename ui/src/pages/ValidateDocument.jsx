@@ -45,8 +45,10 @@ export default function ValidateDocument() {
       setResult(response.data);
     } catch (err) {
       console.error("Erro na validação:", err);
-      if (err.response && err.response.status === 404) {
-        setError(err.response.data.detail || "Código de verificação inválido ou certificado revogado.");
+      if (err.response && err.response.status === 404 || err.response.status === 400) {
+          const detail = err.response.data?.detail;
+          const message =  typeof detail === "string" ? detail : detail?.message;
+        setError(message || "Código de verificação inválido ou certificado revogado.");
       } else {
         setError("Erro ao conectar com o serviço de validação. Tente novamente mais tarde.");
       }
@@ -193,7 +195,7 @@ export default function ValidateDocument() {
                     type="h6"
                     className="mt-1 break-words text-gray-900"
                   >
-                    {result.name}
+                    {result.document.name}
                   </Typography>
                 </div>
               </div>
@@ -214,38 +216,16 @@ export default function ValidateDocument() {
                     type="h6"
                     className="mt-1 break-words text-gray-900"
                   >
-                    {result.student_name}
+                    {result.recipient.name}
                   </Typography>
                 </div>
               </div>
 
               {/* INFORMAÇÕES COMPLEMENTARES */}
-              {(result.student_email || result.city) && (
+              {(result.recipient.city) && (
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
 
-                  {result.student_email && (
-                    <div className="flex items-start gap-3">
-                      <Mail className="mt-1 h-5 w-5 shrink-0 text-gray-400" />
-
-                      <div className="min-w-0">
-                        <Typography
-                          type="small"
-                          className="font-medium text-gray-500"
-                        >
-                          E-mail
-                        </Typography>
-
-                        <Typography
-                          type="small"
-                          className="mt-1 break-all font-semibold text-gray-900"
-                        >
-                          {result.student_email}
-                        </Typography>
-                      </div>
-                    </div>
-                  )}
-
-                  {result.city && (
+                  {result.recipient.city && (
                     <div className="flex items-start gap-3">
                       <MapPin className="mt-1 h-5 w-5 shrink-0 text-gray-400" />
 
@@ -261,7 +241,7 @@ export default function ValidateDocument() {
                           type="small"
                           className="mt-1 font-semibold text-gray-900"
                         >
-                          {result.city}
+                          {result.recipient.city}
                         </Typography>
                       </div>
                     </div>
@@ -283,8 +263,16 @@ export default function ValidateDocument() {
                   type="small"
                   className="mt-2 break-all font-mono font-bold tracking-wider text-gray-900"
                 >
-                  {result.verification_code}
+                  {result.verification.code}
                 </Typography>
+
+                <Typography
+                  type="small"
+                  className="mt-1 uppercase tracking-wide text-green-700"
+                >
+                  Status: {result.verification.status === "valid" ? "Válido" : result.verification.status}
+                </Typography>
+
               </div>
 
             </Card.Body>

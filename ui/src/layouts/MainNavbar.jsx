@@ -21,7 +21,7 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 
-export default function MainNavbar({ user, onLogout }) {
+export default function MainNavbar({ user, onLogout, children }) {
   const [openNav, setOpenNav] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -109,7 +109,7 @@ export default function MainNavbar({ user, onLogout }) {
                 <Button
                   as="a"
                   href="/register"
-                  variant="gradient"
+                  variant="solid"
                   size="sm"
                   color="primary"
                 >
@@ -211,13 +211,16 @@ export default function MainNavbar({ user, onLogout }) {
         </Collapse>
       </Navbar>
 
+      {/* CONTEUDO DAS ROTAS */}
+      <main className="w-full flex-1">{children}</main>
+
       {/* DRAWER */}
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <Drawer.Overlay>
           <Drawer.Panel placement="left" className="p-4">
 
             <Card
-              color="transparent"
+              color="secondary"
               shadow={false}
               className="h-full w-full"
             >

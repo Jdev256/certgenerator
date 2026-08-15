@@ -8,8 +8,8 @@ export function ErrorSection7() {
         <div>
           <FlagIcon className="w-20 h-20 mx-auto" />
           <Typography
-            variant="h1"
-            color="blue-gray"
+            type="h1"
+            color="secondary"
             className="mt-10 !text-3xl !leading-snug md:!text-4xl"
           >
             Error 404 <br /> It looks like something went wrong.
@@ -18,7 +18,7 @@ export function ErrorSection7() {
             Don&apos;t worry, our team is already on it.Please try refreshing
             the page or come back later.
           </Typography>
-          <Button color="gray" className="w-full px-4 md:w-[8rem]">
+          <Button color="secondary" className="w-full px-4 md:w-[8rem]">
             back home
           </Button>
         </div>

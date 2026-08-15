@@ -1,5 +1,4 @@
 import React from "react";
-import MainNavbar from "../layouts/MainNavbar";
 
 import {
   Button,
@@ -11,8 +10,6 @@ import {
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <MainNavbar />
-
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-800">
         <div className="absolute -right-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-white/10 blur-3xl" />
@@ -21,14 +18,14 @@ export default function Home() {
         <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl items-center px-6 py-20">
           <div className="mx-auto max-w-3xl text-center text-white">
             <Typography
-              variant="small"
+              type="small"
               className="mb-4 font-bold uppercase tracking-widest text-blue-200"
             >
               Plataforma inteligente
             </Typography>
 
             <Typography
-              variant="h1"
+              type="h1"
               className="mb-6 text-4xl font-bold leading-tight md:text-6xl"
             >
               Simplifique seus processos
@@ -42,7 +39,7 @@ export default function Home() {
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button
                 size="lg"
-                color="white"
+                color="secondary"
                 className="text-blue-700 transition duration-300 hover:-translate-y-1"
               >
                 Começar agora
@@ -50,7 +47,7 @@ export default function Home() {
 
               <Button
                 size="lg"
-                variant="outlined"
+                variant="outline"
                 className="border-white text-white transition duration-300 hover:-translate-y-1"
               >
                 Saiba mais
@@ -63,11 +60,11 @@ export default function Home() {
       {/* RECURSOS */}
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
-          <Typography variant="small" className="font-bold uppercase text-blue-600">
+          <Typography type="small" className="font-bold uppercase text-blue-600">
             Recursos
           </Typography>
 
-          <Typography variant="h2" className="mt-3">
+          <Typography type="h2" className="mt-3">
             Tudo em um só lugar
           </Typography>
 
@@ -83,7 +80,7 @@ export default function Home() {
                 ⚡
               </div>
 
-              <Typography variant="h5" className="mb-3">
+              <Typography type="h5" className="mb-3">
                 Rápido
               </Typography>
 
@@ -100,7 +97,7 @@ export default function Home() {
                 📊
               </div>
 
-              <Typography variant="h5" className="mb-3">
+              <Typography type="h5" className="mb-3">
                 Organizado
               </Typography>
 
@@ -116,7 +113,7 @@ export default function Home() {
                 🔒
               </div>
 
-              <Typography variant="h5" className="mb-3">
+              <Typography type="h5" className="mb-3">
                 Seguro
               </Typography>
 
