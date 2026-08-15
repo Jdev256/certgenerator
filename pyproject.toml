@@ -1,0 +1,27 @@
+[project]
+name = "certgenerator"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "cairosvg>=2.9.0",
+    "fastapi[standard]>=0.141.1",
+    "openpyxl>=3.1.5",
+    "pandas>=3.0.5",
+    "pandas-stubs~=3.0.5",
+    "pydantic>=2.13.4",
+    "qrcode>=8.2",
+    "sqlalchemy>=2.0.51",
+    "uvicorn",
+    "alembic",
+    "pydantic",
+    "pydantic-settings",
+    "pytest",
+    "httpx",
+    "pyjwt>=2.13.0",
+    "passlib>=1.7.4",
+    "psycopg2-binary>=2.9.12",
+    "bcrypt>=3.2.0,<4.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["app"]
