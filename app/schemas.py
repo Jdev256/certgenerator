@@ -132,9 +132,29 @@ class DocumentResponse(BaseModel):
     qr_code_image: Optional[str] = None
     recipient_id: int  # Mapeado de recipient_id (no model original estava student_id)
 
-class DocumentValidationResponse(BaseModel):
+
+class DocumentValidationDocument(BaseModel):
     name: str
-    student_name: str
-    student_email: Optional[str] = None
+    issued_at: Optional[date] = None
+    document_type: str
+
+
+class DocumentValidationRecipient(BaseModel):
+    name: str
     city: Optional[str] = None
-    verification_code: str
+
+
+class DocumentValidationVerification(BaseModel):
+    code: str
+    status: str
+    revoked: bool
+
+
+class DocumentValidationResponse(BaseModel):
+    valid: bool
+    message: str
+    document: DocumentValidationDocument
+    recipient: DocumentValidationRecipient
+    verification: DocumentValidationVerification
+    validated_at: datetime
+

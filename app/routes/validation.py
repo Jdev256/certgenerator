@@ -1,25 +1,36 @@
 # routes/validation.py
+
 import logging
 import re
+from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException, Depends, Path
+from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette import status
+
 from ..db import get_db
 from ..models import Document
-from ..schemas import DocumentValidationResponse
+from ..schemas import (
+    DocumentValidationResponse,
+    DocumentValidationDocument,
+    DocumentValidationRecipient,
+    DocumentValidationVerification,
+)
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/api/validate",
-    tags=["Validation"]
+    tags=["Validation"],
 )
 
+# Ajuste esse padrão de acordo com o formato real
+# dos seus códigos de verificação.
 VERIFICATION_CODE_PATTERN = re.compile(
     r"^[A-Za-z0-9_-]{8,128}$"
 )
+
 
 @router.get(
     "/{code}",
@@ -36,11 +47,16 @@ VERIFICATION_CODE_PATTERN = re.compile(
         500: {"description": "Erro interno durante a validação."},
     },
 )
-def validate_document(code: str = Path(
-            ...,
-            min_length=8, max_length=128,
-            description="Código único de verificação do certificado.",
-            examples=["CERT-8F4A2B91"],),db: Session = Depends(get_db)):
+def validate_certificate(
+    code: str = Path(
+        ...,
+        min_length=8,
+        max_length=128,
+        description="Código único de verificação do certificado.",
+        examples=["CERT-8F4A2B91"],
+    ),
+    db: Session = Depends(get_db),
+):
     """
     Validação pública de certificado.
 
@@ -129,12 +145,32 @@ def validate_document(code: str = Path(
         )
 
     # ---------------------------------------------------------
-    # 6. Resposta (schema flat, compatível com o frontend atual)
+    # 6. Dados públicos do destinatário
+    # ---------------------------------------------------------
+    recipient = certificate.recipient
+
+    # ---------------------------------------------------------
+    # 7. Resposta completa
     # ---------------------------------------------------------
     return DocumentValidationResponse(
-        name=certificate.name,
-        student_name=certificate.recipient.name,
-        student_email=certificate.recipient.email,
-        city=certificate.recipient.city,
-        verification_code=certificate.verification_code,
+        valid=True,
+        message=(
+            "Certificado válido. Os dados apresentados "
+            "correspondem a um documento registrado no sistema."
+        ),
+        document=DocumentValidationDocument(
+            name=certificate.name,
+            issued_at=certificate.issue_date,
+            document_type=certificate.doc_type.value,
+        ),
+        recipient=DocumentValidationRecipient(
+            name=recipient.name,
+            city=recipient.city,
+        ),
+        verification=DocumentValidationVerification(
+            code=certificate.verification_code,
+            status="valid",
+            revoked=False,
+        ),
+        validated_at=datetime.now(timezone.utc),
     )
