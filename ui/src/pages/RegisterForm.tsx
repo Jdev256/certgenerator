@@ -39,7 +39,6 @@ export default function RegisterForm({ onRegisterSuccess, switchToLogin }) {
     setLoading(true);
 
     try {
-      // Payload enviado no formato JSON para o Pydantic (UserCreate)
       const payload = {
         email: email,
         password: password,
@@ -47,7 +46,7 @@ export default function RegisterForm({ onRegisterSuccess, switchToLogin }) {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/api/users/register",
+        "https://api.certgenerate.com.br/api/users/register",
         payload
       );
 

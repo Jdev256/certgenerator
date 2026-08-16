@@ -25,11 +25,11 @@ export default function Login({authUser}){
       // Monta os dados para o endpoint de login OAuth2 (x-www-form-urlencoded)
       const formData = new URLSearchParams();
       formData.append("username", email);
-      formData.append("password", password); // Corrigido o typo de 'passwors'
+      formData.append("password", password);
 
       // Requisição 1: Autenticação
       const loginResponse = await axios.post(
-        "http://localhost:8000/api/users/login",
+        "https://api.certgenerate.com.br//api/users/login",
         formData,
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -40,7 +40,7 @@ export default function Login({authUser}){
       localStorage.setItem("token", token);
 
       // Requisição 2: Dados do usuário autenticado
-      const userResponse = await axios.get("http://localhost:8000/api/users/me", {
+      const userResponse = await axios.get("https:///api.certgenerate.com.br/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

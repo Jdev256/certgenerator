@@ -97,7 +97,7 @@ export default function EventsPage() {
     e.preventDefault();
     if (!formData.name || !formData.issue_organization || !formData.event_date) return;
 
-    const url = editingEvent ? `/events/${editingEvent.id}` : "/events/";
+    const url = editingEvent ? `https://api.certgenerate.com.br/api/events/${editingEvent.id}` : "/events/";
     const method = editingEvent ? "PUT" : "POST";
 
     try {

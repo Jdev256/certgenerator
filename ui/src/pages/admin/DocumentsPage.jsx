@@ -44,7 +44,7 @@ export default function DocumentsPage() {
 
     const fetchDocuments = async () => {
       try {
-        const response = await fetch(`/api/documents/?event_id=${selectedEventId}`, {
+        const response = await fetch(`https://api.certgenerate.com.br//api/documents/?event_id=${selectedEventId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Erro ao buscar documentos.");

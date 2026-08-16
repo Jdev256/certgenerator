@@ -186,7 +186,7 @@ export default function Generator() {
 
       try {
         // 4. Chamada HTTP para a API real
-        const response = await fetch(`/api/documents/upload?event_id=${selectedEventId}`, {
+        const response = await fetch(`https://api.certgenerate.com.br/api/documents/upload?event_id=${selectedEventId}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`, // Token JWT do usuário autenticado
@@ -227,7 +227,7 @@ export default function Generator() {
       try {
         addToast("Download", "Gerando arquivo ZIP no servidor...");
 
-        const response = await fetch(`/api/documents/download?event_id=${selectedEventId}`, {
+        const response = await fetch(`https://api.certgenerate.com.br/api/documents/download?event_id=${selectedEventId}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

@@ -15,7 +15,7 @@ origins = [
     "localhost:5173",
     "http://localhost:3000",
     "https://certgenerate.com.br",
-    "https://www.certgenerate.com.br"
+    "https://www.certgenerate.com.br",
     "https://api.certgenerate.com.br"
 ]
 
