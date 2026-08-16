@@ -1,14 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from .db import engine
-from .models import Base
 from .routes.users import router as users_router
 from .routes.documents import router as certs_router
 from .routes.validation import router as validation_router
 from .routes.events import router as events_router
 from .routes.recipients import router as recipients_router
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CertGenerator")
 
@@ -18,7 +14,9 @@ origins = [
     "http://127.0.0.1:5173",
     "localhost:5173",
     "http://localhost:3000",
-    "https://certgenerator.com.br"
+    "https://certgenerate.com.br",
+    "https://www.certgenerate.com.br"
+    "https://api.certgenerate.com.br"
 ]
 
 app.add_middleware(

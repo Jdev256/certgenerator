@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Query
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.responses import FileResponse
+from starlette.concurrency import run_in_threadpool
 
 from .users import get_current_user
 from ..models import User, Document, Event
@@ -69,14 +70,29 @@ async def upload(
     db.commit()
 
     await excel.seek(0)
-    # Executa a geração e a persistência no banco via Generator
-    zip_buffer = Generator.generate_documents(
-        excel=excel,
-        template_path=str(permanent_template_path),
-        db=db,
-        user_id=current_user.id,
-        event_id=event_id
-    )
+
+    try:
+        zip_buffer = await run_in_threadpool(
+            Generator.generate_documents,
+            excel=excel,
+            template_path=str(permanent_template_path),
+            db=db,
+            user_id=current_user.id,
+            event_id=event_id
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except KeyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Coluna esperada não encontrada na planilha: {e}"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao processar a planilha e gerar os documentos: {str(e)}"
+        )
 
     zip_path = STORAGE_DIR / f"event_{event_id}_certificados.zip"
     with open(zip_path, "wb") as f:

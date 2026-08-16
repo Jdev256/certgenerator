@@ -36,16 +36,16 @@ export default function ValidateDocument() {
     setError(null);
     setResult(null);
 
-    try {
+        try {
       // Endpoint público de validação (não requer Bearer Token)
       const response = await axios.get(
-        `https://certgenerator.com.br/api/validate/${encodeURIComponent(cleanCode)}`
+        `https://api.certgenerate.com.br/api/validate/${encodeURIComponent(cleanCode)}`
       );
 
       setResult(response.data);
     } catch (err) {
       console.error("Erro na validação:", err);
-      if (err.response && err.response.status === 404 || err.response.status === 400) {
+      if (err.response && (err.response.status === 404 || err.response.status === 400)) {
           const detail = err.response.data?.detail;
           const message =  typeof detail === "string" ? detail : detail?.message;
         setError(message || "Código de verificação inválido ou certificado revogado.");
@@ -56,6 +56,7 @@ export default function ValidateDocument() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gray-50 px-4 py-12">

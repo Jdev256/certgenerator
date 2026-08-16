@@ -137,14 +137,6 @@ class Destinatario(Base):
         nullable=False,
     )
 
-    __table_args__ = (
-        # Unicidade por usuário, não global: dois usuários diferentes podem
-        # cadastrar destinatários com o mesmo nome/e-mail/telefone.
-        Index("ix_recipients_user_name_unique", "user_id", "name", unique=True),
-        Index("ix_recipients_user_email_unique", "user_id", "email", unique=True),
-        Index("ix_recipients_user_phone_unique", "user_id", "phone", unique=True),
-    )
-
 
 class Document(Base):
     __tablename__ = "documents"

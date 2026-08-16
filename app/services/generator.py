@@ -233,7 +233,6 @@ class Generator:
             recipient = self.db.execute(
                 select(Destinatario).where(
                     Destinatario.name == name,
-                    Destinatario.city == city,
                     Destinatario.user_id == self.user_id
                 )
             ).scalars().first()
@@ -245,7 +244,7 @@ class Generator:
             phone_changed = phone and recipient.phone != phone
 
             if name_changed or city_changed or dob_changed or phone_changed:
-                print(f"[Correção de Nome] {recipient.email}: de '{recipient.name}' para '{name}'")
+                print(f"[Atualização de Destinatário] ID {recipient.id}: '{recipient.name}' ({recipient.city}) -> '{name}' ({city})")
                 recipient.name = name
                 recipient.city = city
                 if dob:
