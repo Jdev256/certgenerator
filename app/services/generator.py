@@ -112,18 +112,14 @@ class Generator:
                 mapping[raw_city] = "Geral"
                 continue
 
-            # Procura por uma variação já existente no pool do lote com similaridade >= 78%
             matches = difflib.get_close_matches(norm_city, canonical_pool, n=1, cutoff=0.78)
 
             if matches:
-                # Encontrou uma variação já registrada no mesmo lote -> Unifica
                 canonical_name = matches[0]
             else:
-                # É um nome novo no lote -> Adiciona ao pool como referência
                 canonical_name = norm_city
                 canonical_pool.append(canonical_name)
 
-            # Formata de maneira legível (ex: "VARGEM GRANDE" -> "Vargem Grande")
             mapping[raw_city] = canonical_name.title()
 
         return mapping
@@ -141,14 +137,6 @@ class Generator:
         if not city_col:
             city_col = "Cidade Polo"
             self.df[city_col] = "Geral"
-
-        #if city_col:
-            #self.df[city_col] = (
-            #    self.df[city_col].astype(str).fillna("Geral").str.strip().str.split("-").str[0].str.split().str[:2].str.join(" ").str.strip().str.lower().str.title().fillna("Geral").replace("", "Geral")
-            #)
-        #else:
-        #    city_col = "Cidade Polo"
-        #    self.df[city_col] = "Geral"
 
         raw_cities = self.df[city_col].dropna().unique().tolist()
         city_mapping = self._unify_city_names(raw_cities)

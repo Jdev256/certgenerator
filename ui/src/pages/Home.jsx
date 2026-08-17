@@ -130,7 +130,7 @@ export default function Home() {
       <footer className="bg-gray-900 px-6 py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 md:flex-row">
           <Typography className="font-normal text-gray-400">
-            © {new Date().getFullYear()} Sua Plataforma. Todos os direitos
+            © {new Date().getFullYear()} CertGenerate. Todos os direitos
             reservados.
           </Typography>
 
