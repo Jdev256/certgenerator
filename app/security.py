@@ -1,14 +1,12 @@
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-
 import jwt
 from passlib.context import CryptContext
 
-# Configurações JWT (em produção, obtenha de variáveis de ambiente)
 SECRET_KEY = os.getenv("SECRET_KEY", "rvha8Uc8e8hrwnbwEO0zEM2Zbiv5ZVD9Yob7QUssXlk")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 horas
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

