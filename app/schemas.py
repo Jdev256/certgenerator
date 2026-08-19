@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, ConfigDict
-from .models import RecipientType, DocumentType, EventStatus, Role
+from .models import RecipientType, DocumentType, EventStatus
 
 
 # ==========================================
@@ -20,7 +20,6 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
-    role: Role
 
 class UserResponse(UserBase, BaseSchema):
     id: int
@@ -31,8 +30,6 @@ class ListUsers(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    role: Role
-
 
 class TokenData(BaseModel):
     email: Optional[str] = None
