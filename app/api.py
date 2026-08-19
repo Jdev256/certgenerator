@@ -29,8 +29,8 @@ app.add_middleware(
 
 router = APIRouter(prefix="/api", tags=["API"])
 
-#app.router.include_router(users_router)
+app.router.include_router(users_router)
 app.include_router(validation_router)
-#app.include_router(certs_router)
-#app.include_router(events_router)
-#app.include_router(recipients_router)
+app.include_router(certs_router)
+app.include_router(events_router)
+app.include_router(recipients_router)
