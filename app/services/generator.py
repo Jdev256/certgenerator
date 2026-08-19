@@ -452,7 +452,7 @@ class Generator:
                 # Substituição dos tokens no SVG
                 certificado_atualizado = (
                     template_content
-                    .replace("{{NAME_RECIPIENT}}", nome_destinatario)
+                    .replace("{{DESTINATARIO}}", nome_destinatario)
                     .replace("{{VALIDATION-CODE}}", cert_code)
                     .replace("__QR_CODE__", qr_base64)
                 )
