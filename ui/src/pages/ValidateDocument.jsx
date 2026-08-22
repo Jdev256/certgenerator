@@ -37,24 +37,23 @@ export default function ValidateDocument() {
     setResult(null);
 
         try {
-      // Endpoint público de validação (não requer Bearer Token)
-      const response = await axios.get(
-        `https://api.certgenerate.com.br/api/validate/${encodeURIComponent(cleanCode)}`
-      );
+          const response = await axios.get(
+            `https://api.certgenerate.com.br/api/validate/${encodeURIComponent(cleanCode)}`
+          );
 
-      setResult(response.data);
-    } catch (err) {
-      console.error("Erro na validação:", err);
-      if (err.response && (err.response.status === 404 || err.response.status === 400)) {
-          const detail = err.response.data?.detail;
-          const message =  typeof detail === "string" ? detail : detail?.message;
-        setError(message || "Código de verificação inválido ou certificado revogado.");
-      } else {
-        setError("Erro ao conectar com o serviço de validação. Tente novamente mais tarde.");
-      }
-    } finally {
-      setLoading(false);
-    }
+          setResult(response.data);
+        } catch (err) {
+          console.error("Erro na validação:", err);
+          if (err.response && (err.response.status === 404 || err.response.status === 400)) {
+              const detail = err.response.data?.detail;
+              const message =  typeof detail === "string" ? detail : detail?.message;
+            setError(message || "Código de verificação inválido ou certificado revogado.");
+          } else {
+            setError("Erro ao conectar com o serviço de validação. Tente novamente mais tarde.");
+          }
+        } finally {
+          setLoading(false);
+        }
   };
 
 

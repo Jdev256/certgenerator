@@ -17,46 +17,42 @@ export default function Login({authUser}){
     const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
-    e.preventDefault(); // Previne o reload padrão da página
-    setError(null);
-    setLoading(true);
+        e.preventDefault(); // Previne o reload padrão da página
+        setError(null);
+        setLoading(true);
 
-    try {
-      // Monta os dados para o endpoint de login OAuth2 (x-www-form-urlencoded)
-      const formData = new URLSearchParams();
-      formData.append("username", email);
-      formData.append("password", password);
+        try {
+          const formData = new URLSearchParams();
+          formData.append("username", email);
+          formData.append("password", password);
 
-      // Requisição 1: Autenticação
-      const loginResponse = await axios.post(
-        "https://api.certgenerate.com.br//api/users/login",
-        formData,
-        {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          const loginResponse = await axios.post(
+            "https://api.certgenerate.com.br//api/users/login",
+            formData,
+            {
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            }
+          );
+
+          const token = loginResponse.data.access_token;
+          localStorage.setItem("token", token);
+
+          const userResponse = await axios.get("https:///api.certgenerate.com.br/api/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (authUser) {
+            authUser(userResponse.data);
+          }
+
+          console.log("Login realizado com sucesso:", userResponse.data);
+        } catch (err) {
+          console.error("Erro na autenticação:", err);
+          const message = err.response?.data?.detail || "Erro ao realizar login. Verifique suas credenciais.";
+          setError(message);
+        } finally {
+          setLoading(false);
         }
-      );
-
-      const token = loginResponse.data.access_token;
-      localStorage.setItem("token", token);
-
-      // Requisição 2: Dados do usuário autenticado
-      const userResponse = await axios.get("https:///api.certgenerate.com.br/api/users/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // Passa os dados obtidos para o estado global/prop de autenticação se fornecida
-      if (authUser) {
-        authUser(userResponse.data);
-      }
-
-      console.log("Login realizado com sucesso:", userResponse.data);
-    } catch (err) {
-      console.error("Erro na autenticação:", err);
-      const message = err.response?.data?.detail || "Erro ao realizar login. Verifique suas credenciais.";
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
   };
 
     return (
