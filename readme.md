@@ -1,7 +1,3 @@
-Sim. O README antigo está com cara de **documentação de protótipo**, porque mistura versão, roadmap, diagrama, tabela de campos, tecnologias e funcionalidades históricas. Para um projeto que já evoluiu para uma plataforma, o README deve explicar **o que o sistema faz, qual problema resolve e quais são os principais fluxos técnicos**.
-
-Eu deixaria assim:
-
 # Gerador de Certificados
 
 Sistema para **emissão, processamento e validação de certificados em lote**, desenvolvido para automatizar o fluxo completo desde a entrada dos dados dos participantes até a geração dos documentos finais.
