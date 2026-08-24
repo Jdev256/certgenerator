@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
-import sqlalchemy
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://neondb_owner:npg_x9Zvlwd4EkhO@ep-autumn-dust-ac6p2jh1-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
     DATABASE_URL, pool_pre_ping=True, pool_recycle=1800, pool_size=10, max_overflow=20
