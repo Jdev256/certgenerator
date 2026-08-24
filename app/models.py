@@ -61,6 +61,7 @@ class EventStatus(str, enum.Enum):
     ARCHIVED = "arquivado"
     CANCELLED = "cancelado"
 
+
 class User(Base):
     __tablename__ = "users"
 
